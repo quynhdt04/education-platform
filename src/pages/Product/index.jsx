@@ -9,6 +9,7 @@ import SkeletonProductItem from './SkeletonProductItem';
 import { getFavoriteProductsByUser } from "../../services/favoriteProducts.service";
 import { FaRegLightbulb } from "react-icons/fa";
 import { getProducListSuggest } from '../../services/suggest.service';
+import { toast } from 'sonner';
 
 function Product() {
 
@@ -20,6 +21,7 @@ function Product() {
     const selectedPrices = useSelector(state => state.priceFilterReducer);
     const [favoriteProducts, setFavoriteProducts] = useState([]);
     const [reload, setReload] = useState(false);
+    const productToCart = useSelector(state => state.cartReducer);
 
     const handleOpenModal = (product) => {
         setSelectedProduct(product);
@@ -80,15 +82,31 @@ function Product() {
 
     const handleSuggest = async () => {
         const userId = localStorage.getItem('userId');
-        const res = await getProducListSuggest(userId);
-        console.log(res.productIds)
-        console.log(originalProducts);
 
-        const productsFinal = originalProducts.filter(item =>
-            res.productIds.includes(item.id)
-        );
-        setProducts(productsFinal);
-    }
+        try {
+            const res = await getProducListSuggest(userId);
+
+            if (!res || !Array.isArray(res.productIds)) {
+                toast.info('Không thể lấy gợi ý lúc này');
+                return;
+            }
+
+            const productsFinal = originalProducts.filter(item =>
+                res.productIds.includes(item.id)
+            );
+
+            if (productsFinal.length > 0) {
+                setProducts(productsFinal);
+            } else {
+                toast.info('Không thể lấy gợi ý lúc này');
+            }
+        } catch (error) {
+            console.error('Lỗi gọi API:', error);
+            toast.info('Không thể lấy gợi ý lúc này');
+        }
+    };
+
+
 
     return (
         <>
