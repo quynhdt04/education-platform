@@ -1,0 +1,22 @@
+$color-blue-drak: #0A033C;
+$color-blue-light: #00ADEF;
+$color-line: #EBEBEBEB;
+$color-text-gray: #6F6F6F6F;
+$color-btn-lineader: linear-gradient(135deg, #0A033C, #00ADEF);
+$color-orange: #FF4C29;
+
+@mixin button($font-size, $font-weight, $color-text, $padding, $bg-color, $border-radius) {
+    display: inline-block;
+    align-items: center;
+    font-size: $font-size;
+    font-weight: $font-weight;
+    color: $color-text;
+    padding: $padding;
+    background: $bg-color;
+    border-radius: $border-radius;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
